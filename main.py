@@ -9,7 +9,6 @@ Structure:
 
 """
 import json
-import time
 import random
 import numpy as np
 import pandas as pd
@@ -51,12 +50,12 @@ class RoBERTa(object):
     Inspired from the paper and the official repo example.
     """
 
-    def __init__(self, configuration):
+    def __init__(self, config):
         if torch.cuda.is_available():
             self.device = torch.device("cuda")
         else:
             self.device = torch.device("cpu")
-        self.config = configuration
+        self.config = config
         # initialize all seeds
         seed = self.config.seed
         random.seed(seed)
@@ -80,8 +79,16 @@ class RoBERTa(object):
         data_file = open("Apps_for_Android_5.json", "r")
         reviews = []
         # keep track of balance of classes
-        classes_len = [0, 0, 0, 0, 0] # goal every length should be 44k (max with balancing)
+        classes_len = [0, 0, 0, 0, 0]  # goal every length should be 44k (max with balancing)
         for i, line in enumerate(data_file.readlines()):
+
+            # 1. unbalanced (to try)
+            # if i < 220000:
+            #     review = json.loads(line.replace("\n", ""))
+            #     review["overall"] = int(review["overall"]) - 1
+            #     reviews.append(review)
+
+            # 2. balanced dataset (official)
             review = json.loads(line.replace("\n", ""))
             # for ease, downgrade all scores from 1 to be [0..4]
             review["overall"] = int(review["overall"]) - 1
@@ -170,7 +177,7 @@ class RoBERTa(object):
                 self.optimizer.step()
                 scheduler.step()
             # at the end of epoch average the training loss
-            avg_train_loss = epoch_training_loss / len(self.train_loader)
+            avg_train_loss = epoch_training_loss / len(train_loader)
             avg_train_loss /= self.config.epochs
             # 2. start validation (same than training)
             # call to bring model in evaluation mode (no training anymore)
@@ -265,7 +272,7 @@ class RoBERTa(object):
 
 if __name__ == '__main__':
     if len(sys.argv) < 1:
-        raise Exception("specify the name of your configuration; e.g. python main.py roberta_android.json")
+        raise Exception("specify the name of your configuration; e.g. python main.py config.json")
     configuration = Configuration(sys.argv[1])
     roberta = RoBERTa(configuration)
     # init sets
@@ -275,3 +282,4 @@ if __name__ == '__main__':
     # displays stats (accuracies and losses of each phases of each epoch)
     for stat in stats:
         print(json.dumps(stat, indent=4))
+    exit(1)

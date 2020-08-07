@@ -10,14 +10,14 @@ def compute_analysis():
     classes = []
     for i in range(0, 5):
         classes.append({
-            "score": i+1,
+            "score": i + 1,
             "num_reviews": 0,
             "avg_length_review": 0
         })
     # compute
     for i, line in enumerate(dataset):
         review = json.loads(line.replace("\n", ""))
-        idx = int(review["overall"])-1
+        idx = int(review["overall"]) - 1
         classes[idx]["num_reviews"] += 1
         if classes[idx]["num_reviews"] > 1:
             classes[idx]["avg_length_review"] += len(review["reviewText"].split(" "))
@@ -44,8 +44,8 @@ if __name__ == '__main__':
     opacity = 0.8
 
     rects1 = ax.bar(index, num_reviews, bar_width,
-                     alpha=opacity,
-                     color='b')
+                    alpha=opacity,
+                    color='b')
 
     rects2 = ax2.bar(index + bar_width, avg_length, bar_width,
                      alpha=opacity,
@@ -59,3 +59,4 @@ if __name__ == '__main__':
     plt.xticks(index + bar_width, ('1', '2', '3', '4', '5'))
     plt.tight_layout()
     plt.show()
+    exit(1)
