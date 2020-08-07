@@ -21,7 +21,7 @@ The AAR dataset contains 752'936 entries. Each entries has a `review`, a summary
 - An interesting paper from IBM says that 20% of the reviews are apparently misclassified and do not correspond with their actual scores: [fault in your stars: an analysis of Android App Reviews](https://arxiv.org/pdf/1708.04968.pdf).
 
 <div style="text-align:center">
-<img src="coarse_analysis.png" width="370" height="250" /></div>
+<img src="coarse_analysis.png" width="330" height="220" /></div>
 
 #### Trivial solutions
 
@@ -29,7 +29,6 @@ A trivial solution in the *unbalanced case* would be to assign always 5 stars as
 A trivial solution in the *balanced case* would be to throw a dice each time; it would give an expected accuracy of `20%` (each throw is independent).
 
 > Our goal is to be better than these and at the same time we want to build a model which is consistent (it should be perform well with any type of validation set). Therefore we want to have a balanced dataset in case a user wants to predict only reviews with a score of 2. (Note: in this case the prediction would be really bad if we don't balance the dataset)
-
 
 #### Model and Methods
 
@@ -47,8 +46,7 @@ It carefully looks at the impact of the parameters and the training data size. I
 
 > I augmented the large pre-trained model from RoBERTa (roberta-large) with the AAR datasets.
 Each class has **44k** reviews. The training set contains 198k reviews and the validation set 22k.
-I used the default RobertaTokenizer to encode the dataset and ran the training with a batch size of 8,
- a learning rate of 10^{-6}, and 1 to 3 epochs (accuracy did not improve much anymore). The experiments last at most 4 hours.
+I used the default RobertaTokenizer to encode the dataset and ran the training with a batch size of 8,a learning rate of 10^{-6}, and 1 to 3 epochs (accuracy did not improve much anymore). The experiments last at most 4 hours.
 
 
 ##### Preventing over-fitting
@@ -59,7 +57,6 @@ I used the default RobertaTokenizer to encode the dataset and ran the training w
 
 
 #### Results (see logs in *results/*)
-
 (Bad solution) With transfer learning on **roberta-large** and the **unbalanced** model with a train set of 190k and a valid set of 22k reviews, I achieved an accuracy of: `` 70.48% ``.
 
 (Solution) With transfer learning on **roberta-large** and the **balanced** model with a train set of 190k and a valid set of 22k reviews, I achieved an accuracy of: `` 63.55%``.
@@ -72,7 +69,6 @@ I used the default RobertaTokenizer to encode the dataset and ran the training w
 
 <a name="commands"></a>
 ## Environment and Commands
-
 - experiments done on a *Nvidia GeForce GTX 1080 Ti GPU* (cuda 10.1 and python 3.7.6)
 - installation: `pip install -r requirements.txt`
 - training & evaluation: `python main.py config.json`
